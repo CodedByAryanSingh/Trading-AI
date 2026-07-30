@@ -6,29 +6,38 @@ from ta.volatility import BollingerBands
 
 class TechnicalIndicators:
     def __init__(self, data: pd.DataFrame):
-         self.data = data
+        self.data = data.copy()
+
     def add_indicators(self) -> pd.DataFrame:
+        """
+        Adds common technical indicators to the market data.
+        """
+
+        # Handle yfinance MultiIndex columns
         close = self.data["Close"]
 
-        # Moving Averages
-        self.data["SMA_20"] = SMAIndicator(close, window=20).sma_indicator()
-        self.data["SMA_50"] = SMAIndicator(close, window=50).sma_indicator()
+        if isinstance(close, pd.DataFrame):
+            close = close.squeeze()
+
+        # Simple Moving Averages
+        self.data["SMA_20"] = SMAIndicator(close=close, window=20).sma_indicator()
+        self.data["SMA_50"] = SMAIndicator(close=close, window=50).sma_indicator()
 
         # Exponential Moving Average
-        self.data["EMA_20"] = EMAIndicator(close, window=20).ema_indicator()
+        self.data["EMA_20"] = EMAIndicator(close=close, window=20).ema_indicator()
 
-        # RSI
-        self.data["RSI"] = RSIIndicator(close, window=14).rsi()
+        # Relative Strength Index
+        self.data["RSI"] = RSIIndicator(close=close, window=14).rsi()
 
         # MACD
-        macd = MACD(close)
+        macd = MACD(close=close)
 
         self.data["MACD"] = macd.macd()
         self.data["MACD_Signal"] = macd.macd_signal()
         self.data["MACD_Histogram"] = macd.macd_diff()
 
         # Bollinger Bands
-        bb = BollingerBands(close)
+        bb = BollingerBands(close=close)
 
         self.data["BB_High"] = bb.bollinger_hband()
         self.data["BB_Low"] = bb.bollinger_lband()
