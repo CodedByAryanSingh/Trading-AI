@@ -72,6 +72,25 @@ export default function Dashboard(): JSX.Element {
         </div>
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <RecentSignals />
+        </div>
+        <div>
+          <WatchlistPreview tickers={[query.ticker, 'MSFT', 'GOOG']} />
+          <OpenPositions />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <MarketNews />
+        </div>
+        <div>
+          <PortfolioSummary />
+        </div>
+      </div>
+
       <RecentActivity />
     </div>
   )
