@@ -1,12 +1,480 @@
+Updated todo list for frontend/index.html:
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trading AI Dashboard</title>
-  </head>
-  <body class="bg-gray-50">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Trading-AI — AI-Powered Quantitative Trading Platform</title>
+  <meta name="description" content="Trading-AI: a modern, AI-powered quantitative trading platform for research, backtesting, and live trading." />
+</head>
+<body>
+  <!-- 1. Header -->
+  <header id="header" class="site-header" role="banner">
+    <div class="header-inner">
+      <div class="brand" id="brand">
+        <a href="/" class="logo" aria-label="Trading-AI Home">Trading-AI</a>
+      </div>
+
+      <nav id="main-nav" class="primary-navigation" role="navigation" aria-label="Main Navigation">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="#hero" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="#market-overview" class="nav-link">Markets</a></li>
+          <li class="nav-item"><a href="#technical-analysis" class="nav-link">Indicators</a></li>
+          <li class="nav-item"><a href="#strategy-engine" class="nav-link">Strategies</a></li>
+          <li class="nav-item"><a href="#ai-prediction" class="nav-link">AI</a></li>
+          <li class="nav-item"><a href="#backtesting" class="nav-link">Backtest</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions" role="group" aria-label="Header actions">
+        <a href="#dashboard" class="button button--secondary" id="dashboard-button">Dashboard</a>
+        <button type="button" class="button button--ghost" id="login-button">Login</button>
+        <button type="button" class="button button--primary" id="signup-button">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="site-main" role="main">
+    <!-- 2. Hero Section -->
+    <section id="hero" class="hero-section">
+      <div class="hero-content">
+        <h1 id="hero-heading" class="hero-title">Trading-AI — AI-Powered Quantitative Trading</h1>
+        <p id="hero-desc" class="hero-description">
+          A production-ready platform for data-driven traders: historical & live market data, advanced technical analysis,
+          Smart Money Concepts, machine learning predictions, backtesting, and portfolio management.
+        </p>
+
+        <div class="hero-ctas" role="group" aria-label="Primary calls to action">
+          <a href="#signup" class="cta cta--primary" id="cta-get-started">Get Started</a>
+          <a href="#demo" class="cta cta--secondary" id="cta-view-demo">View Demo</a>
+        </div>
+
+        <section id="hero-stats" class="hero-stats" aria-label="Platform statistics">
+          <h2 class="visually-hidden">Platform statistics</h2>
+          <ul class="stats-list" role="list">
+            <li class="stat-item" id="stat-supported-markets">
+              <strong class="stat-value">6+</strong>
+              <span class="stat-label">Supported Markets</span>
+              <p class="stat-note">Stocks, Crypto, Forex, ETFs, Indices, Futures</p>
+            </li>
+            <li class="stat-item" id="stat-indicators">
+              <strong class="stat-value">40+</strong>
+              <span class="stat-label">Technical Indicators</span>
+              <p class="stat-note">SMA, EMA, RSI, MACD, VWAP, ATR, Ichimoku…</p>
+            </li>
+            <li class="stat-item" id="stat-ai-models">
+              <strong class="stat-value">5+</strong>
+              <span class="stat-label">AI Models</span>
+              <p class="stat-note">Random Forest, XGBoost, LightGBM, ML Ensemble</p>
+            </li>
+            <li class="stat-item" id="stat-strategies">
+              <strong class="stat-value">12+</strong>
+              <span class="stat-label">Trading Strategies</span>
+              <p class="stat-note">Crossover, Momentum, Breakout, SMC, ICT</p>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </section>
+
+    <!-- 3. Market Overview Section -->
+    <section id="market-overview" class="market-overview-section" aria-labelledby="market-overview-heading">
+      <h2 id="market-overview-heading">Market Overview</h2>
+
+      <div class="market-summary" role="region" aria-label="Market summary cards">
+        <article class="market-card market-card--stocks" id="market-stocks" aria-labelledby="market-stocks-title">
+          <h3 id="market-stocks-title">Stocks</h3>
+          <p class="market-card__summary">Live tickers, top movers, sector heatmap placeholder.</p>
+        </article>
+
+        <article class="market-card market-card--crypto" id="market-crypto" aria-labelledby="market-crypto-title">
+          <h3 id="market-crypto-title">Crypto</h3>
+          <p class="market-card__summary">Major cryptos, liquidity, volume trends placeholder.</p>
+        </article>
+
+        <article class="market-card market-card--forex" id="market-forex" aria-labelledby="market-forex-title">
+          <h3 id="market-forex-title">Forex</h3>
+          <p class="market-card__summary">Major pairs, spreads, session activity placeholder.</p>
+        </article>
+
+        <article class="market-card market-card--etfs" id="market-etfs" aria-labelledby="market-etfs-title">
+          <h3 id="market-etfs-title">ETFs</h3>
+          <p class="market-card__summary">Top ETFs and sector flows placeholder.</p>
+        </article>
+
+        <article class="market-card market-card--indices" id="market-indices" aria-labelledby="market-indices-title">
+          <h3 id="market-indices-title">Indices</h3>
+          <p class="market-card__summary">Global indices overview placeholder.</p>
+        </article>
+
+        <article class="market-card market-card--futures" id="market-futures" aria-labelledby="market-futures-title">
+          <h3 id="market-futures-title">Futures</h3>
+          <p class="market-card__summary">Commodities and futures activity placeholder.</p>
+        </article>
+      </div>
+
+      <aside id="live-market-status" class="live-market-status" aria-labelledby="live-market-status-heading">
+        <h3 id="live-market-status-heading">Live Market Status</h3>
+        <p class="live-status-note">Real-time connection status and health indicators will display here.</p>
+        <ul class="live-status-list">
+          <li class="live-status-item">Exchange connectivity: <span class="status-placeholder">—</span></li>
+          <li class="live-status-item">Last update: <span class="status-placeholder">—</span></li>
+          <li class="live-status-item">Latency: <span class="status-placeholder">—</span></li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- 4. Market Data Features -->
+    <section id="market-data-features" class="market-data-features" aria-labelledby="market-data-features-heading">
+      <h2 id="market-data-features-heading">Market Data Features</h2>
+
+      <div class="features-grid" role="list">
+        <article class="feature-card" id="feature-historical" aria-labelledby="feature-historical-title">
+          <h3 id="feature-historical-title">Historical Data</h3>
+          <p>Minute, hourly, daily, and custom ranges. CSV/Parquet export support.</p>
+        </article>
+
+        <article class="feature-card" id="feature-live-streaming" aria-labelledby="feature-live-streaming-title">
+          <h3 id="feature-live-streaming-title">Live Streaming</h3>
+          <p>WebSocket streaming for intraday ticks and OHLCV updates.</p>
+        </article>
+
+        <article class="feature-card" id="feature-multiple-exchanges" aria-labelledby="feature-multiple-exchanges-title">
+          <h3 id="feature-multiple-exchanges-title">Multiple Exchanges</h3>
+          <p>Connectors for major exchanges and data providers.</p>
+        </article>
+
+        <article class="feature-card" id="feature-timeframes" aria-labelledby="feature-timeframes-title">
+          <h3 id="feature-timeframes-title">Multiple Timeframes</h3>
+          <p>Multi-timeframe analysis and composite indicators.</p>
+        </article>
+
+        <article class="feature-card" id="feature-data-export" aria-labelledby="feature-data-export-title">
+          <h3 id="feature-data-export-title">Data Export</h3>
+          <p>Download data snapshots for offline analysis.</p>
+        </article>
+
+        <article class="feature-card" id="feature-data-caching" aria-labelledby="feature-data-caching-title">
+          <h3 id="feature-data-caching-title">Data Caching</h3>
+          <p>Local and remote caching for fast repeat queries.</p>
+        </article>
+
+        <article class="feature-card" id="feature-corporate-actions" aria-labelledby="feature-corporate-actions-title">
+          <h3 id="feature-corporate-actions-title">Corporate Actions</h3>
+          <p>Dividends, splits, and corporate events integrated.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5. Technical Analysis Section -->
+    <section id="technical-analysis" class="technical-analysis-section" aria-labelledby="technical-analysis-heading">
+      <h2 id="technical-analysis-heading">Technical Analysis</h2>
+
+      <div class="indicators-grid" role="list">
+        <article class="indicator-card" id="ind-sma"><h3>SMA</h3><p>Simple Moving Average</p></article>
+        <article class="indicator-card" id="ind-ema"><h3>EMA</h3><p>Exponential Moving Average</p></article>
+        <article class="indicator-card" id="ind-rsi"><h3>RSI</h3><p>Relative Strength Index</p></article>
+        <article class="indicator-card" id="ind-macd"><h3>MACD</h3><p>Moving Average Convergence Divergence</p></article>
+        <article class="indicator-card" id="ind-atr"><h3>ATR</h3><p>Average True Range</p></article>
+        <article class="indicator-card" id="ind-adx"><h3>ADX</h3><p>Average Directional Index</p></article>
+        <article class="indicator-card" id="ind-bollinger"><h3>Bollinger Bands</h3><p>Volatility bands</p></article>
+        <article class="indicator-card" id="ind-vwap"><h3>VWAP</h3><p>Volume Weighted Average Price</p></article>
+        <article class="indicator-card" id="ind-ichimoku"><h3>Ichimoku Cloud</h3><p>Trend & support/resistance</p></article>
+        <article class="indicator-card" id="ind-supertrend"><h3>SuperTrend</h3><p>Trend-following filter</p></article>
+        <article class="indicator-card" id="ind-obv"><h3>OBV</h3><p>On-Balance Volume</p></article>
+        <article class="indicator-card" id="ind-stochastic"><h3>Stochastic</h3><p>Stochastic oscillator</p></article>
+        <article class="indicator-card" id="ind-mfi"><h3>MFI</h3><p>Money Flow Index</p></article>
+      </div>
+    </section>
+
+    <!-- 6. Smart Money Concepts Section -->
+    <section id="smart-money-concepts" class="smc-section" aria-labelledby="smc-heading">
+      <h2 id="smc-heading">Smart Money Concepts (SMC)</h2>
+
+      <div class="smc-grid" role="list">
+        <article class="smc-card" id="smc-bos"><h3>BOS</h3><p>Break of Structure</p></article>
+        <article class="smc-card" id="smc-choch"><h3>CHoCH</h3><p>Change of Character</p></article>
+        <article class="smc-card" id="smc-mss"><h3>MSS</h3><p>Market Structure Shift</p></article>
+        <article class="smc-card" id="smc-order-blocks"><h3>Order Blocks</h3><p>Institutional order zones</p></article>
+        <article class="smc-card" id="smc-breaker-blocks"><h3>Breaker Blocks</h3><p>Structure reversal zones</p></article>
+        <article class="smc-card" id="smc-mitigation-blocks"><h3>Mitigation Blocks</h3><p>Liquidity mitigation zones</p></article>
+        <article class="smc-card" id="smc-fvg"><h3>FVG</h3><p>Fair Value Gaps</p></article>
+        <article class="smc-card" id="smc-liquidity-pools"><h3>Liquidity Pools</h3><p>Clustered orders areas</p></article>
+        <article class="smc-card" id="smc-liquidity-sweeps"><h3>Liquidity Sweeps</h3><p>Stops hunting events</p></article>
+        <article class="smc-card" id="smc-premium-discount"><h3>Premium &amp; Discount Zones</h3><p>Value areas</p></article>
+        <article class="smc-card" id="smc-equal-highs"><h3>Equal Highs</h3><p>Price rejection patterns</p></article>
+        <article class="smc-card" id="smc-equal-lows"><h3>Equal Lows</h3><p>Support clusters</p></article>
+      </div>
+    </section>
+
+    <!-- 7. ICT Concepts Section -->
+    <section id="ict-concepts" class="ict-section" aria-labelledby="ict-heading">
+      <h2 id="ict-heading">ICT Concepts</h2>
+
+      <div class="ict-grid" role="list">
+        <article class="ict-card" id="ict-power-of-three"><h3>Power of Three</h3><p>Market rotation phases</p></article>
+        <article class="ict-card" id="ict-judas-swing"><h3>Judas Swing</h3><p>False breakout pattern</p></article>
+        <article class="ict-card" id="ict-ote"><h3>OTE</h3><p>Optimal Trade Entry</p></article>
+        <article class="ict-card" id="ict-kill-zones"><h3>Kill Zones</h3><p>High probability session zones</p></article>
+        <article class="ict-card" id="ict-silver-bullet"><h3>Silver Bullet</h3><p>Key entry setup</p></article>
+        <article class="ict-card" id="ict-daily-bias"><h3>Daily Bias</h3><p>Session directional bias</p></article>
+        <article class="ict-card" id="ict-weekly-bias"><h3>Weekly Bias</h3><p>Higher timeframe bias</p></article>
+        <article class="ict-card" id="ict-monthly-bias"><h3>Monthly Bias</h3><p>Macro directional context</p></article>
+        <article class="ict-card" id="ict-asian-session"><h3>Asian Session</h3><p>Session-specific liquidity</p></article>
+        <article class="ict-card" id="ict-london-session"><h3>London Session</h3><p>European trading hours</p></article>
+        <article class="ict-card" id="ict-newyork-session"><h3>New York Session</h3><p>North American trading hours</p></article>
+      </div>
+    </section>
+
+    <!-- 8. Strategy Engine Section -->
+    <section id="strategy-engine" class="strategy-engine-section" aria-labelledby="strategy-engine-heading">
+      <h2 id="strategy-engine-heading">Strategy Engine</h2>
+
+      <div class="strategy-cards" role="list">
+        <article class="strategy-card" id="str-sma-crossover"><h3>SMA Crossover</h3><p>Simple moving average crossover strategy.</p></article>
+        <article class="strategy-card" id="str-ema-crossover"><h3>EMA Crossover</h3><p>Faster-moving EMA crossover entries.</p></article>
+        <article class="strategy-card" id="str-rsi"><h3>RSI Strategy</h3><p>Momentum-based RSI entries &amp; exits.</p></article>
+        <article class="strategy-card" id="str-macd"><h3>MACD Strategy</h3><p>Trend and momentum signals using MACD.</p></article>
+        <article class="strategy-card" id="str-bollinger"><h3>Bollinger Strategy</h3><p>Volatility squeeze and breakout</p></article>
+        <article class="strategy-card" id="str-trend"><h3>Trend Following</h3><p>Long-term trend capture strategy.</p></article>
+        <article class="strategy-card" id="str-breakout"><h3>Breakout</h3><p>Breakout entries with confirmation.</p></article>
+        <article class="strategy-card" id="str-scalping"><h3>Scalping</h3><p>High-frequency micro trades.</p></article>
+        <article class="strategy-card" id="str-swing"><h3>Swing Trading</h3><p>Multi-day swing setups.</p></article>
+        <article class="strategy-card" id="str-smc"><h3>Smart Money Strategy</h3><p>SMC-based institutional style entries.</p></article>
+        <article class="strategy-card" id="str-ict"><h3>ICT Strategy</h3><p>ICT concepts combined into signals.</p></article>
+        <article class="strategy-card" id="str-hybrid"><h3>Hybrid Strategy</h3><p>Combines indicators + ML confidence scoring.</p></article>
+      </div>
+    </section>
+
+    <!-- 9. AI Prediction Section -->
+    <section id="ai-prediction" class="ai-prediction-section" aria-labelledby="ai-prediction-heading">
+      <h2 id="ai-prediction-heading">AI Prediction</h2>
+
+      <div class="ai-placeholders">
+        <article class="ai-card" id="ai-next-candle">
+          <h3>Next Candle Prediction</h3>
+          <p class="placeholder">Placeholder: predicted OHLC movement and direction.</p>
+        </article>
+
+        <article class="ai-card" id="ai-trend-prediction">
+          <h3>Trend Prediction</h3>
+          <p class="placeholder">Placeholder: short/medium/long-term trend probability.</p>
+        </article>
+
+        <article class="ai-card" id="ai-breakout-prob">
+          <h3>Breakout Probability</h3>
+          <p class="placeholder">Placeholder: probability of imminent breakout.</p>
+        </article>
+
+        <article class="ai-card" id="ai-reversal-prob">
+          <h3>Reversal Probability</h3>
+          <p class="placeholder">Placeholder: reversal likelihood and signal strength.</p>
+        </article>
+
+        <article class="ai-card" id="ai-volatility-forecast">
+          <h3>Volatility Forecast</h3>
+          <p class="placeholder">Placeholder: expected volatility / ATR forecast.</p>
+        </article>
+
+        <article class="ai-card" id="ai-confidence-score">
+          <h3>Confidence Score</h3>
+          <p class="placeholder">Placeholder: model confidence and ensemble score.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 10. Backtesting Section -->
+    <section id="backtesting" class="backtesting-section" aria-labelledby="backtesting-heading">
+      <h2 id="backtesting-heading">Backtesting</h2>
+
+      <div class="backtest-grid" role="list">
+        <article class="backtest-card" id="bt-historical-simulation"><h3>Historical Simulation</h3><p>Simulate strategy across historical data.</p></article>
+        <article class="backtest-card" id="bt-equity-curve"><h3>Equity Curve</h3><p>Plot cumulative returns and drawdowns.</p></article>
+        <article class="backtest-card" id="bt-trade-history"><h3>Trade History</h3><p>List of individual trades for analysis.</p></article>
+        <article class="backtest-card" id="bt-win-rate"><h3>Win Rate</h3><p>Winning percentage across backtest.</p></article>
+        <article class="backtest-card" id="bt-profit-factor"><h3>Profit Factor</h3><p>Gross profit / gross loss metric.</p></article>
+        <article class="backtest-card" id="bt-sharpe"><h3>Sharpe Ratio</h3><p>Risk-adjusted return metric.</p></article>
+        <article class="backtest-card" id="bt-sortino"><h3>Sortino Ratio</h3><p>Downside risk-adjusted return.</p></article>
+        <article class="backtest-card" id="bt-max-drawdown"><h3>Maximum Drawdown</h3><p>Largest peak-to-trough decline.</p></article>
+      </div>
+    </section>
+
+    <!-- 11. Portfolio Management Section -->
+    <section id="portfolio-management" class="portfolio-section" aria-labelledby="portfolio-heading">
+      <h2 id="portfolio-heading">Portfolio Management</h2>
+
+      <div class="portfolio-grid" role="region" aria-label="Portfolio overview">
+        <article class="portfolio-card" id="port-holdings"><h3>Holdings</h3><p>List of current positions and quantities.</p></article>
+        <article class="portfolio-card" id="port-cash-balance"><h3>Cash Balance</h3><p>Available cash and buying power.</p></article>
+        <article class="portfolio-card" id="port-asset-allocation"><h3>Asset Allocation</h3><p>Allocation by asset class and sector.</p></article>
+        <article class="portfolio-card" id="port-pnl"><h3>Profit &amp; Loss</h3><p>Unrealized / realized P&amp;L metrics.</p></article>
+        <article class="portfolio-card" id="port-watchlist"><h3>Watchlist</h3><p>Tracked tickers and alerts.</p></article>
+        <article class="portfolio-card" id="port-performance"><h3>Portfolio Performance</h3><p>Returns and benchmark comparisons.</p></article>
+      </div>
+    </section>
+
+    <!-- 12. News & Sentiment Section -->
+    <section id="news-sentiment" class="news-sentiment-section" aria-labelledby="news-sentiment-heading">
+      <h2 id="news-sentiment-heading">News &amp; Sentiment</h2>
+
+      <div class="news-grid" role="list">
+        <article class="news-card" id="news-market-news"><h3>Market News</h3><p>Latest headlines and curated market articles.</p></article>
+        <article class="news-card" id="news-economic-calendar"><h3>Economic Calendar</h3><p>Upcoming macro events and impact predictions.</p></article>
+        <article class="news-card" id="news-earnings-calendar"><h3>Earnings Calendar</h3><p>Upcoming earnings and historical surprises.</p></article>
+        <article class="news-card" id="news-ai-sentiment"><h3>AI Sentiment Analysis</h3><p>Aggregated sentiment from news &amp; social feeds.</p></article>
+      </div>
+    </section>
+
+    <!-- 13. API & Technology Section -->
+    <section id="api-technology" class="api-technology-section" aria-labelledby="api-technology-heading">
+      <h2 id="api-technology-heading">API &amp; Technology</h2>
+
+      <div class="tech-list" role="list" aria-label="Technologies used">
+        <article class="tech-item" id="tech-python"><h3>Python</h3><p>Core backend language for data processing.</p></article>
+        <article class="tech-item" id="tech-fastapi"><h3>FastAPI</h3><p>REST API and WebSocket server.</p></article>
+        <article class="tech-item" id="tech-postgres"><h3>PostgreSQL</h3><p>Persistent storage for historical data and users.</p></article>
+        <article class="tech-item" id="tech-react"><h3>React</h3><p>Frontend SPA framework.</p></article>
+        <article class="tech-item" id="tech-vite"><h3>Vite</h3><p>Frontend build tooling and dev server.</p></article>
+        <article class="tech-item" id="tech-ml"><h3>Machine Learning</h3><p>Scikit-learn, XGBoost, LightGBM models.</p></article>
+        <article class="tech-item" id="tech-docker"><h3>Docker</h3><p>Containerized deployment.</p></article>
+        <article class="tech-item" id="tech-restapi"><h3>REST API</h3><p>Standardized endpoints for integrations.</p></article>
+      </div>
+    </section>
+
+    <!-- 14. Roadmap Section -->
+    <section id="roadmap" class="roadmap-section" aria-labelledby="roadmap-heading">
+      <h2 id="roadmap-heading">Roadmap</h2>
+
+      <ol class="roadmap-timeline" role="list">
+        <li id="roadmap-market-data" class="roadmap-item">
+          <h3>Market Data</h3>
+          <p>Complete multi-provider historical and streaming connectors.</p>
+        </li>
+        <li id="roadmap-technical-analysis" class="roadmap-item">
+          <h3>Technical Analysis</h3>
+          <p>Expand indicator library and multi-timeframe toolkit.</p>
+        </li>
+        <li id="roadmap-strategy-engine" class="roadmap-item">
+          <h3>Strategy Engine</h3>
+          <p>Modular strategies, manager, confidence scoring.</p>
+        </li>
+        <li id="roadmap-ai-prediction" class="roadmap-item">
+          <h3>AI Prediction</h3>
+          <p>Train and deploy ensemble ML models for next-candle and trend forecasting.</p>
+        </li>
+        <li id="roadmap-backtesting" class="roadmap-item">
+          <h3>Backtesting</h3>
+          <p>Robust backtest engine with risk &amp; performance metrics.</p>
+        </li>
+        <li id="roadmap-portfolio" class="roadmap-item">
+          <h3>Portfolio</h3>
+          <p>Portfolio management and risk automation features.</p>
+        </li>
+        <li id="roadmap-frontend" class="roadmap-item">
+          <h3>Frontend Dashboard</h3>
+          <p>Interactive charts, watchlists and realtime UX.</p>
+        </li>
+        <li id="roadmap-cloud" class="roadmap-item">
+          <h3>Cloud Deployment</h3>
+          <p>Production deployment, monitoring and scaling.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 15. FAQ Section -->
+    <section id="faq" class="faq-section" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently Asked Questions</h2>
+
+      <div class="faq-list">
+        <details class="faq-item" id="faq-q1">
+          <summary class="faq-question">How does Trading-AI source market data?</summary>
+          <div class="faq-answer">
+            <p>Placeholder: Data providers, exchanges, and caching strategies will be described here.</p>
+          </div>
+        </details>
+
+        <details class="faq-item" id="faq-q2">
+          <summary class="faq-question">What AI models are used?</summary>
+          <div class="faq-answer">
+            <p>Placeholder: Model types (Random Forest, XGBoost, LightGBM, ensembles) and training pipelines.</p>
+          </div>
+        </details>
+
+        <details class="faq-item" id="faq-q3">
+          <summary class="faq-question">Can I backtest my strategies?</summary>
+          <div class="faq-answer">
+            <p>Placeholder: Backtesting features, metrics, and exporting results.</p>
+          </div>
+        </details>
+
+        <details class="faq-item" id="faq-q4">
+          <summary class="faq-question">How is portfolio risk managed?</summary>
+          <div class="faq-answer">
+            <p>Placeholder: Position sizing, ATR stops, max drawdown protections, and automation options.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 16. Contact Section -->
+    <section id="contact" class="contact-section" aria-labelledby="contact-heading">
+      <h2 id="contact-heading">Contact Us</h2>
+
+      <form id="contact-form" class="contact-form" action="/contact" method="post" novalidate>
+        <div class="form-row">
+          <label for="contact-name">Name</label>
+          <input type="text" id="contact-name" name="name" placeholder="Your full name" required aria-required="true" />
+        </div>
+
+        <div class="form-row">
+          <label for="contact-email">Email</label>
+          <input type="email" id="contact-email" name="email" placeholder="you@example.com" required aria-required="true" />
+        </div>
+
+        <div class="form-row">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" name="message" rows="6" placeholder="How can we help?" required aria-required="true"></textarea>
+        </div>
+
+        <div class="form-row form-actions">
+          <button type="submit" id="contact-submit" class="button button--primary">Submit</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- 17. Footer -->
+  <footer id="footer" class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo">Trading-AI</a>
+        <p class="footer-tagline">AI-driven quantitative trading platform</p>
+      </div>
+
+      <nav id="footer-nav" class="footer-navigation" aria-label="Footer navigation">
+        <ul class="footer-links">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#market-overview">Markets</a></li>
+          <li><a href="#technical-analysis">Indicators</a></li>
+          <li><a href="#strategy-engine">Strategies</a></li>
+          <li><a href="#api-technology">API &amp; Tech</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-resources" role="navigation" aria-label="Resources">
+        <ul class="resource-list">
+          <li><a href="/docs" id="link-docs">Documentation</a></li>
+          <li><a href="https://github.com/CodedByAryanSingh/Trading-AI" id="link-github">GitHub</a></li>
+          <li><a href="/privacy" id="link-privacy">Privacy Policy</a></li>
+          <li><a href="/terms" id="link-terms">Terms of Service</a></li>
+          <li><a href="#contact" id="link-contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; <span id="copyright-year">2026</span> Trading-AI. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
 </html>
