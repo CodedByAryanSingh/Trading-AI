@@ -38,3 +38,10 @@ typing_extensions==4.16.0
 urllib3==2.7.0
 websockets==17.0
 yfinance==1.5.2
+
+# Web and auth dependencies
+fastapi==0.114.3
+uvicorn[standard]==0.23.2
+python-jose==3.3.0
+passlib[bcrypt]==1.8.1
+python-multipart==1.2.0

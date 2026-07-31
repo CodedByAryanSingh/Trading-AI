@@ -28,6 +28,10 @@ app.add_middleware(
 
 app.include_router(api_router, prefix="/api")
 
+# include authentication routes
+from api.auth import router as auth_router
+app.include_router(auth_router, prefix="/api/auth")
+
 
 @app.get("/healthz")
 async def healthz() -> dict:
