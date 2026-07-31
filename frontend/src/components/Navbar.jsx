@@ -26,6 +26,7 @@ export default function Navbar() {
           <nav className="hidden lg:flex gap-4 ml-6">
             <NavLink to="/dashboard" className={({isActive}) => `text-sm ${isActive ? 'text-indigo-600' : 'text-gray-600'} hover:text-gray-900`}>Dashboard</NavLink>
             <NavLink to="/market" className={({isActive}) => `text-sm ${isActive ? 'text-indigo-600' : 'text-gray-600'} hover:text-gray-900`}>Markets</NavLink>
+            <NavLink to="/explorer" className={({isActive}) => `text-sm ${isActive ? 'text-indigo-600' : 'text-gray-600'} hover:text-gray-900`}>Explorer</NavLink>
             <NavLink to="/market" className={({isActive}) => `text-sm ${isActive ? 'text-indigo-600' : 'text-gray-600'} hover:text-gray-900`}>Analysis</NavLink>
             <NavLink to="/strategies" className={({isActive}) => `text-sm ${isActive ? 'text-indigo-600' : 'text-gray-600'} hover:text-gray-900`}>Strategies</NavLink>
             <NavLink to="/backtest" className={({isActive}) => `text-sm ${isActive ? 'text-indigo-600' : 'text-gray-600'} hover:text-gray-900`}>Backtesting</NavLink>
