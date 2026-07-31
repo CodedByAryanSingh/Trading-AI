@@ -1,25 +1,34 @@
 import React from 'react'
-import Chart from './components/Chart'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Dashboard from './pages/Dashboard'
+import MarketAnalysis from './pages/MarketAnalysis'
+import AIPredictions from './pages/AIPredictions'
+import StrategyResults from './pages/StrategyResults'
+import BacktestDashboard from './pages/BacktestDashboard'
+import Portfolio from './pages/Portfolio'
+import Auth from './pages/Auth'
+import Navbar from './components/Navbar'
+import Sidebar from './components/Sidebar'
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto py-4 px-6">
-          <h1 className="text-2xl font-semibold text-gray-900">Trading AI Dashboard</h1>
-        </div>
-      </header>
-      <main className="flex-1 p-6 max-w-7xl mx-auto">
-        <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-medium mb-4">Live Chart</h2>
-          <div style={{ height: 500 }}>
-            <Chart />
-          </div>
-        </section>
-      </main>
-      <footer className="bg-white border-t py-3">
-        <div className="max-w-7xl mx-auto px-6 text-sm text-gray-500">© Trading AI</div>
-      </footer>
+    <div className="min-h-screen bg-gray-100">
+      <Navbar />
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1 p-6">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/market" element={<MarketAnalysis />} />
+            <Route path="/ai" element={<AIPredictions />} />
+            <Route path="/strategies" element={<StrategyResults />} />
+            <Route path="/backtest" element={<BacktestDashboard />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/auth" element={<Auth />} />
+          </Routes>
+        </main>
+      </div>
     </div>
   )
 }

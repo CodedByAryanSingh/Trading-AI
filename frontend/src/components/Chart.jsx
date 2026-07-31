@@ -1,22 +1,20 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createChart } from 'lightweight-charts'
 
-/**
- * Simple candlestick chart using lightweight-charts.
- * Expects to be rendered inside a container with explicit height.
- */
-export default function Chart() {
+export default function Chart({ ticker = 'AAPL', interval = '1d', period = '1mo' }) {
   const ref = useRef(null)
   const chartRef = useRef(null)
   const candleSeriesRef = useRef(null)
   const volumeSeriesRef = useRef(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     if (!ref.current) return
 
     const chart = createChart(ref.current, {
       width: ref.current.clientWidth,
-      height: ref.current.clientHeight,
+      height: ref.current.clientHeight || 500,
       layout: {
         backgroundColor: '#ffffff',
         textColor: '#333',
@@ -39,25 +37,35 @@ export default function Chart() {
     volumeSeriesRef.current = volumeSeries
     chartRef.current = chart
 
-    // sample data (OHLC) - replace with real API data
-    const candles = [
-      { time: '2024-07-01', open: 100, high: 105, low: 98, close: 104 },
-      { time: '2024-07-02', open: 104, high: 107, low: 103, close: 106 },
-      { time: '2024-07-03', open: 106, high: 110, low: 105, close: 108 },
-      { time: '2024-07-04', open: 108, high: 112, low: 107, close: 111 },
-      { time: '2024-07-05', open: 111, high: 115, low: 110, close: 114 },
-    ]
+    let mounted = true
 
-    const volumes = [
-      { time: '2024-07-01', value: 1200, color: 'rgba(0, 150, 136, 0.8)' },
-      { time: '2024-07-02', value: 900, color: 'rgba(0, 150, 136, 0.8)' },
-      { time: '2024-07-03', value: 1500, color: 'rgba(0, 150, 136, 0.8)' },
-      { time: '2024-07-04', value: 2000, color: 'rgba(244, 67, 54, 0.8)' },
-      { time: '2024-07-05', value: 1800, color: 'rgba(0, 150, 136, 0.8)' },
-    ]
+    async function load() {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await fetch(`/api/ohlcv?ticker=${encodeURIComponent(ticker)}&interval=${encodeURIComponent(interval)}&period=${encodeURIComponent(period)}`)
+        if (!res.ok) throw new Error('Failed to fetch')
+        const data = await res.json()
+        const candles = data.candles || []
+        const volumes = data.volumes || []
+        if (!mounted) return
+        candleSeries.setData(candles)
+        const minLen = Math.min(candles.length, volumes.length)
+        const volColored = volumes.slice(0, minLen).map((v, i) => {
+          const c = candles[i]
+          const color = c && c.close >= c.open ? 'rgba(0,150,136,0.8)' : 'rgba(244,67,54,0.8)'
+          return { ...v, color }
+        })
+        volumeSeries.setData(volColored)
+      } catch (err) {
+        console.error(err)
+        setError(err.message || String(err))
+      } finally {
+        setLoading(false)
+      }
+    }
 
-    candleSeries.setData(candles)
-    volumeSeries.setData(volumes)
+    load()
 
     const handleResize = () => {
       if (!ref.current) return
@@ -66,10 +74,17 @@ export default function Chart() {
     window.addEventListener('resize', handleResize)
 
     return () => {
+      mounted = false
       window.removeEventListener('resize', handleResize)
       chart.remove()
     }
-  }, [])
+  }, [ticker, interval, period])
 
-  return <div ref={ref} className="w-full h-full" />
+  return (
+    <div className="h-full">
+      {loading && <div className="p-4">Loading chart...</div>}
+      {error && <div className="p-4 text-red-600">Error: {error}</div>}
+      <div ref={ref} style={{ width: '100%', height: 500 }} />
+    </div>
+  )
 }
