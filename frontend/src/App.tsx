@@ -1,29 +1,29 @@
-import React from 'react'
-import { Routes, Route, Link } from 'react-router-dom'
-import Dashboard from './pages/Dashboard'
-import BacktestResults from './pages/BacktestResults'
+import { Routes, Route } from "react-router-dom";
+import Layout from "@/components/Layout";
+import Dashboard from "@/pages/Dashboard";
+import Auth from "@/pages/Auth";
+import MarketExplorer from "@/pages/MarketExplorer";
+import MarketAnalysis from "@/pages/MarketAnalysis";
+import AIPredictions from "@/pages/AIPredictions";
+import BacktestDashboard from "@/pages/BacktestDashboard";
+import BacktestResults from "@/pages/BacktestResults";
+import Portfolio from "@/pages/Portfolio";
+import StrategyResults from "@/pages/StrategyResults";
 
-export default function App(): JSX.Element {
+export default function App() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto py-4 px-6 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-gray-900">Trading AI Dashboard</h1>
-          <nav className="space-x-4">
-            <Link to="/" className="text-sm text-gray-600 hover:text-gray-900">Dashboard</Link>
-            <Link to="/backtest" className="text-sm text-gray-600 hover:text-gray-900">Backtest Results</Link>
-          </nav>
-        </div>
-      </header>
-      <main className="flex-1 p-6 max-w-7xl mx-auto w-full">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/backtest" element={<BacktestResults />} />
-        </Routes>
-      </main>
-      <footer className="bg-white border-t py-3">
-        <div className="max-w-7xl mx-auto px-6 text-sm text-gray-500">© Trading AI</div>
-      </footer>
-    </div>
-  )
+    <Routes>
+      <Route path="/auth" element={<Auth />} />
+      <Route element={<Layout />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/market" element={<MarketExplorer />} />
+        <Route path="/analysis" element={<MarketAnalysis />} />
+        <Route path="/predictions" element={<AIPredictions />} />
+        <Route path="/backtest" element={<BacktestDashboard />} />
+        <Route path="/backtest/results" element={<BacktestResults />} />
+        <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/strategy-results" element={<StrategyResults />} />
+      </Route>
+    </Routes>
+  );
 }

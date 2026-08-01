@@ -1,97 +1,38 @@
-import React, { useState, useEffect } from 'react'
-import Chart from '../components/Chart'
-import MarketOverview from '../components/MarketOverview'
-import LiveSummary from '../components/LiveSummary'
-import AISignals from '../components/AISignals'
-import PerformanceWidgets from '../components/PerformanceWidgets'
-import RecentActivity from '../components/RecentActivity'
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import MarketOverview from "@/components/MarketOverview";
+import SignalCard from "@/components/SignalCard";
+import PortfolioSummary from "@/components/PortfolioSummary";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
+import { AnalyzeResponse } from "@/lib/types";
 
-const INTERVALS = ['1d', '1h', '15m', '5m', '1m']
-const PERIODS = ['1mo', '3mo', '6mo', '1y']
-
-export default function Dashboard(): JSX.Element {
-  const [tickerInput, setTickerInput] = useState<string>('AAPL')
-  const [intervalInput, setIntervalInput] = useState<string>('1d')
-  const [periodInput, setPeriodInput] = useState<string>('1mo')
-
-  // debounced state to avoid excessive requests
-  const [query, setQuery] = useState<{ ticker: string; interval: string; period: string }>({
-    ticker: 'AAPL',
-    interval: '1d',
-    period: '1mo',
-  })
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      setQuery({ ticker: tickerInput.trim().toUpperCase() || 'AAPL', interval: intervalInput, period: periodInput })
-    }, 500)
-    return () => clearTimeout(t)
-  }, [tickerInput, intervalInput, periodInput])
-
+export default function Dashboard() {
+  const [tickers] = useState(["AAPL", "MSFT", "GOOGL"]);
+  const { data: analysis } = useQuery({
+    queryKey: ["analysis", tickers],
+    queryFn: async () => {
+      const res = await api.post("/analysis/analyze", { tickers, interval: "1d", period: "1mo" });
+      return res.data as AnalyzeResponse[];
+    },
+  });
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <section className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-lg font-medium mb-4">Live Chart</h2>
-            <div className="flex gap-4 items-center mb-4">
-              <div>
-                <label className="block text-sm text-gray-600">Ticker</label>
-                <input value={tickerInput} onChange={(e) => setTickerInput(e.target.value)} className="mt-1 px-3 py-2 border rounded" />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-600">Interval</label>
-                <select value={intervalInput} onChange={(e) => setIntervalInput(e.target.value)} className="mt-1 px-3 py-2 border rounded">
-                  {INTERVALS.map((i) => (
-                    <option key={i} value={i}>{i}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm text-gray-600">Period</label>
-                <select value={periodInput} onChange={(e) => setPeriodInput(e.target.value)} className="mt-1 px-3 py-2 border rounded">
-                  {PERIODS.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div style={{ height: 500 }}>
-              <Chart ticker={query.ticker} interval={query.interval} period={query.period} />
-            </div>
-          </section>
-
-          <PerformanceWidgets />
-        </div>
-
-        <div className="space-y-6">
-          <MarketOverview tickers={[query.ticker, 'MSFT', 'GOOG', 'BTC-USD']} />
-          <LiveSummary ticker={query.ticker} />
-          <AISignals ticker={query.ticker} />
-        </div>
-      </div>
-
+      <h1 className="text-3xl font-bold">Dashboard</h1>
+      <PortfolioSummary cash={100000} totalValue={105420} totalReturn={5.42} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <RecentSignals />
+          <Card>
+            <CardHeader><CardTitle>Market Sentiment</CardTitle></CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {analysis?.map((item) => <SignalCard key={item.ticker} analysis={item} />)}
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <div>
-          <WatchlistPreview tickers={[query.ticker, 'MSFT', 'GOOG']} />
-          <OpenPositions />
-        </div>
+        <div><MarketOverview /></div>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <MarketNews />
-        </div>
-        <div>
-          <PortfolioSummary />
-        </div>
-      </div>
-
-      <RecentActivity />
     </div>
-  )
+  );
 }

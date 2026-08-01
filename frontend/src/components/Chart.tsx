@@ -1,91 +1,92 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { createChart, IChartApi } from 'lightweight-charts'
+import { useEffect, useRef } from "react";
+import { createChart, ColorType, IChartApi, ISeriesApi } from "lightweight-charts";
+import { Candle, Volume } from "@/lib/types";
 
-type Candle = { time: string | number; open: number; high: number; low: number; close: number }
-type Volume = { time: string | number; value: number; color?: string }
+interface ChartProps {
+  candles: Candle[];
+  volumes: Volume[];
+  height?: number;
+}
 
-export default function Chart({ ticker = 'AAPL', interval = '1d', period = '1mo' }: { ticker?: string; interval?: string; period?: string }): JSX.Element {
-  const ref = useRef<HTMLDivElement | null>(null)
-  const chartRef = useRef<IChartApi | null>(null)
-  const candleSeriesRef = useRef<any>(null)
-  const volumeSeriesRef = useRef<any>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+export default function Chart({ candles, volumes, height = 500 }: ChartProps) {
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<IChartApi | null>(null);
+  const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
+  const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return
-    const container = ref.current
-    const chart = createChart(container, {
-      width: container.clientWidth,
-      height: container.clientHeight,
+    if (!chartContainerRef.current) return;
+
+    const chart = createChart(chartContainerRef.current, {
       layout: {
-        backgroundColor: '#ffffff',
-        textColor: '#333',
+        background: { type: ColorType.Solid, color: "transparent" },
+        textColor: "currentColor",
       },
       grid: {
-        vertLines: { color: '#eee' },
-        horzLines: { color: '#eee' },
+        vertLines: { color: "rgba(128, 128, 128, 0.1)" },
+        horzLines: { color: "rgba(128, 128, 128, 0.1)" },
       },
-      rightPriceScale: { borderVisible: false },
-      timeScale: { borderVisible: false },
-    })
+      crosshair: { mode: 1 },
+      rightPriceScale: { borderColor: "rgba(128, 128, 128, 0.2)" },
+      timeScale: { borderColor: "rgba(128, 128, 128, 0.2)" },
+      height,
+    });
 
-    const candleSeries = chart.addCandlestickSeries()
+    const candleSeries = chart.addCandlestickSeries({
+      upColor: "#22c55e",
+      downColor: "#ef4444",
+      borderUpColor: "#22c55e",
+      borderDownColor: "#ef4444",
+      wickUpColor: "#22c55e",
+      wickDownColor: "#ef4444",
+    });
+
     const volumeSeries = chart.addHistogramSeries({
-      priceFormat: { type: 'volume' },
-      scaleMargins: { top: 0.8, bottom: 0 },
-    })
+      color: "#3b82f6",
+      priceFormat: { type: "volume" },
+      priceScaleId: "",
+    });
+    volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
 
-    candleSeriesRef.current = candleSeries
-    volumeSeriesRef.current = volumeSeries
-    chartRef.current = chart
+    chartRef.current = chart;
+    candleSeriesRef.current = candleSeries;
+    volumeSeriesRef.current = volumeSeries;
 
     const handleResize = () => {
-      if (!ref.current) return
-      chart.applyOptions({ width: ref.current.clientWidth })
-    }
-    window.addEventListener('resize', handleResize)
-
-    // fetch OHLCV from backend
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const resp = await fetch(`/api/ohlcv?ticker=${encodeURIComponent(ticker)}&interval=${encodeURIComponent(interval)}&period=${encodeURIComponent(period)}`)
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
-        const payload = await resp.json()
-        const candles: Candle[] = payload.candles
-        const volumes: Volume[] = payload.volumes
-        // set chart data
-        candleSeries.setData(candles)
-        // map volumes to include color based on candle close vs open
-        const minLen = Math.min(candles.length, volumes.length)
-        const volColored = volumes.slice(0, minLen).map((v, i) => {
-          const c = candles[i]
-          const color = c && c.close >= c.open ? 'rgba(0,150,136,0.8)' : 'rgba(244,67,54,0.8)'
-          return { ...v, color }
-        })
-        volumeSeries.setData(volColored)
-      } catch (err) {
-        // fallback to sample data on error
-        console.error('Failed to fetch OHLCV', err)
-      } finally {
-        setLoading(false)
+      if (chartContainerRef.current) {
+        chart.applyOptions({ width: chartContainerRef.current.clientWidth });
       }
-    }
-
-    fetchData()
+    };
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize)
-      chart.remove()
-    }
-  }, [ticker, interval, period])
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
+  }, [height]);
 
-  return (
-    <div className="w-full h-full relative">
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-10">Loading chart…</div>
-      )}
-      <div ref={ref} className="w-full h-full" />
-    </div>
-  )
+  useEffect(() => {
+    if (candleSeriesRef.current && candles.length > 0) {
+      candleSeriesRef.current.setData(candles.map((c) => ({
+        time: c.time as any,
+        open: c.open,
+        high: c.high,
+        low: c.low,
+        close: c.close,
+      })));
+      chartRef.current?.timeScale().fitContent();
+    }
+  }, [candles]);
+
+  useEffect(() => {
+    if (volumeSeriesRef.current && volumes.length > 0) {
+      volumeSeriesRef.current.setData(volumes.map((v) => ({
+        time: v.time as any,
+        value: v.value,
+        color: v.value >= 0 ? "rgba(34, 197, 94, 0.5)" : "rgba(239, 68, 68, 0.5)",
+      })));
+    }
+  }, [volumes]);
+
+  return <div ref={chartContainerRef} className="w-full" />;
 }
