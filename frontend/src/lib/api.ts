@@ -12,7 +12,8 @@ export const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    // eslint-disable-next-line no-param-reassign
+    (config.headers as any).Authorization = `Bearer ${token}`;
   }
   return config;
 });
