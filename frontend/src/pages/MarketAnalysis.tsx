@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import SignalCard from "@/components/SignalCard";
 import api from "@/lib/api";
 import { AnalyzeResponse } from "@/lib/types";
+import Mt5Panel from "@/components/Mt5Panel";
 
 export default function MarketAnalysis() {
   const [tickers, setTickers] = useState("AAPL,MSFT,GOOGL");
@@ -35,6 +36,14 @@ export default function MarketAnalysis() {
           {data?.map((item) => <SignalCard key={item.ticker} analysis={item} />)}
         </div>
       )}
+      <div className="mt-8">
+        <h2 className="text-2xl font-semibold">MT5 Live (Simulated)</h2>
+        <p className="text-sm text-muted-foreground">Simulated MT5 stream — live candles from backend MT5 simulator.</p>
+        <div className="mt-4">
+          {/* Lazy load the Mt5Panel to avoid SSR issues */}
+          <Mt5Panel initialTicker="EURUSD" />
+        </div>
+      </div>
     </div>
   );
 }

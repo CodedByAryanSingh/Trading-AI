@@ -78,6 +78,15 @@ async def websocket_ohlcv(websocket: WebSocket):
         except RuntimeError:
             pass
 
+
+# MT5 simulated websocket endpoint
+from app.core.mt5_simulator import mt5_stream
+
+
+@app.websocket("/ws/mt5")
+async def websocket_mt5(websocket: WebSocket):
+    """Simulated MetaTrader5 websocket stream for ticks and candles."""
+    await mt5_stream(websocket)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
