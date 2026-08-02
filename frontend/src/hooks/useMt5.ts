@@ -3,17 +3,23 @@ import { useWebSocket } from "./useWebSocket";
 import { Candle, Volume } from "@/lib/types";
 
 export function useMt5(ticker = "EURUSD", timeframe = "1m") {
-  const wsBase = import.meta.env.VITE_WS_URL || "ws://localhost:8000/ws";
+  const wsBase = import.meta.env.VITE_WS_URL || (import.meta.env.DEV ? "ws://localhost:8000/ws" : `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/ws`);
   const url = `${wsBase}/mt5?ticker=${encodeURIComponent(ticker)}&tf=${encodeURIComponent(timeframe)}`;
-  const { data, connected, send } = useWebSocket(url);
+  const { data, connected } = useWebSocket(url);
   const [candles, setCandles] = useState<Candle[]>([]);
-  const [volumes] = useState<Volume[]>([]);
+  const [volumes, setVolumes] = useState<Volume[]>([]);
+  const [source, setSource] = useState<"mt5" | "simulator">("simulator");
 
   useEffect(() => {
     if (!data) return;
-    if (data.type === "tick") {
-      // append/update latest working candle
-      const t = Math.floor(data.time / 60) * 60; // floor to minute
+    if (data.type === "status") {
+      setSource(data.source === "mt5" ? "mt5" : "simulator");
+    } else if (data.type === "history") {
+      setCandles(data.candles.map((c: Candle) => ({ ...c })));
+      setVolumes(data.candles.map((c: Candle & { volume?: number }) => ({ time: c.time, value: c.volume ?? 0 })));
+    } else if (data.type === "tick") {
+      const timeframeSeconds: Record<string, number> = { "1m": 60, "5m": 300, "15m": 900, "1h": 3600, "4h": 14400, "1d": 86400 };
+      const t = Math.floor(data.time / (timeframeSeconds[timeframe] ?? 60)) * (timeframeSeconds[timeframe] ?? 60);
       setCandles((prev) => {
         const last = prev[prev.length - 1];
         const price = data.price;
@@ -28,13 +34,8 @@ export function useMt5(ticker = "EURUSD", timeframe = "1m") {
     } else if (data.type === "candle") {
       const c = { time: data.time as any, open: data.open, high: data.high, low: data.low, close: data.close };
       setCandles((prev) => [...prev.slice(-500), c]);
-    } else if (data.type === "info") {
-      // ignore for now
     }
-  }, [data]);
+  }, [data, timeframe]);
 
-  const setTicker = (t: string) => send(`set_ticker:${t}`);
-  const setTimeframe = (tf: string) => send(`set_tf:${tf}`);
-
-  return { candles, volumes, connected, setTicker, setTimeframe };
+  return { candles, volumes, connected, source };
 }

@@ -37,8 +37,8 @@ export default function MarketAnalysis() {
         </div>
       )}
       <div className="mt-8">
-        <h2 className="text-2xl font-semibold">MT5 Live (Simulated)</h2>
-        <p className="text-sm text-muted-foreground">Simulated MT5 stream — live candles from backend MT5 simulator.</p>
+        <h2 className="text-2xl font-semibold">MT5 Live</h2>
+        <p className="text-sm text-muted-foreground">Connect to your terminal or use the demo feed while developing.</p>
         <div className="mt-4">
           {/* Lazy load the Mt5Panel to avoid SSR issues */}
           <Mt5Panel initialTicker="EURUSD" />

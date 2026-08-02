@@ -6,6 +6,7 @@ import {
   History,
   Wallet,
   BarChart3,
+  CandlestickChart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,7 @@ const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/market", label: "Market Explorer", icon: Search },
   { to: "/analysis", label: "Analysis", icon: BarChart3 },
+  { to: "/trade", label: "Trading Desk", icon: CandlestickChart },
   { to: "/predictions", label: "AI Predictions", icon: Brain },
   { to: "/backtest", label: "Backtest", icon: History },
   { to: "/portfolio", label: "Portfolio", icon: Wallet },

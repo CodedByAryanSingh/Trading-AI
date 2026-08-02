@@ -6,6 +6,7 @@ import PortfolioSummary from "@/components/PortfolioSummary";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { AnalyzeResponse } from "@/lib/types";
+import Mt5Panel from "@/components/Mt5Panel";
 
 export default function Dashboard() {
   const [tickers] = useState(["AAPL", "MSFT", "GOOGL"]);
@@ -18,8 +19,12 @@ export default function Dashboard() {
   });
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
+      <div><p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">Trading intelligence</p><h1 className="mt-2 text-3xl font-bold">Your market, in motion</h1><p className="mt-1 text-muted-foreground">Monitor live candles and connect your MetaTrader 5 terminal.</p></div>
       <PortfolioSummary cash={100000} totalValue={105420} totalReturn={5.42} />
+      <Card>
+        <CardHeader><CardTitle>Live market</CardTitle><p className="text-sm text-muted-foreground">Real MT5 data when the terminal bridge is available; otherwise a clearly marked demo stream.</p></CardHeader>
+        <CardContent><Mt5Panel initialTicker="EURUSD" /></CardContent>
+      </Card>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <Card>

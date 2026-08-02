@@ -1,11 +1,12 @@
 """Market data service with caching and retry logic."""
 from __future__ import annotations
-import time
+import io
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 import pandas as pd
 import yfinance as yf
 from app.utils.logger import get_logger
+from app.core.data_loader import provider_symbol
 
 logger = get_logger(__name__)
 
@@ -26,9 +27,11 @@ class MarketDataService:
             except Exception:
                 df = None
         if df is None:
-            df = yf.download(tickers=ticker, interval=interval, period=period, progress=False)
+            df = yf.download(tickers=provider_symbol(ticker), interval=interval, period=period, progress=False, auto_adjust=True)
             if df.empty:
                 raise ValueError(f"No data returned for {ticker}")
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = df.columns.get_level_values(0)
             if df.index.tz is None:
                 df.index = df.index.tz_localize("UTC")
             try:
@@ -45,6 +48,20 @@ class MarketDataService:
                             "close": float(row.get("Close", 0))})
             volumes.append({"time": time_val, "value": float(row.get("Volume", 0))})
         return candles, volumes
+
+    async def export_ohlcv(self, ticker: str, interval: str, period: str, export_format: str) -> tuple[bytes, str, str]:
+        candles, volumes = await self.get_ohlcv(ticker, interval, period)
+        frame = pd.DataFrame(candles)
+        frame["volume"] = [item["value"] for item in volumes]
+        safe_ticker = "".join(char for char in ticker.upper() if char.isalnum() or char in "_-.")
+        if export_format == "csv":
+            return frame.to_csv(index=False).encode("utf-8"), "text/csv", f"{safe_ticker}_{interval}_{period}.csv"
+        buffer = io.BytesIO()
+        try:
+            frame.to_parquet(buffer, index=False)
+        except ImportError as exc:
+            raise RuntimeError("Parquet export requires pyarrow") from exc
+        return buffer.getvalue(), "application/vnd.apache.parquet", f"{safe_ticker}_{interval}_{period}.parquet"
 
     async def get_overview(self, symbols: List[str]) -> List[Dict[str, Any]]:
         results = []

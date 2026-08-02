@@ -1,7 +1,7 @@
 """Market data endpoints."""
 from __future__ import annotations
 import datetime
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Response
 from app.core.market_data import MarketDataService
 from app.schemas import MarketOverviewResponse, OHLCVResponse
 from app.utils.logger import get_logger
@@ -28,6 +28,20 @@ async def market_overview(tickers: str = Query(default="AAPL,MSFT,GOOGL")):
     symbols = [t.strip().upper() for t in tickers.split(",") if t.strip()]
     data = await market_service.get_overview(symbols)
     return MarketOverviewResponse(data=data)
+
+@router.get("/export")
+async def export_ohlcv(
+    ticker: str = Query(..., min_length=1, max_length=20),
+    interval: str = Query(default="1d"),
+    period: str = Query(default="1y"),
+    format: str = Query(default="csv", pattern="^(csv|parquet)$"),
+):
+    try:
+        content, media_type, filename = await market_service.export_ohlcv(ticker, interval, period, format)
+        return Response(content=content, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="{filename}"'})
+    except Exception as exc:
+        logger.exception("Failed to export OHLCV for %s", ticker)
+        raise HTTPException(status_code=500, detail=f"Failed to export market data: {exc}")
 
 @router.get("/live-price")
 async def live_price(ticker: str = Query(..., min_length=1, max_length=20)):

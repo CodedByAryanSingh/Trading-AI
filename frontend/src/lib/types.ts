@@ -82,3 +82,41 @@ export interface Watchlist {
   symbols: string[];
   created_at: string;
 }
+
+export interface TradeIdea {
+  ticker: string;
+  action: "BUY" | "SELL" | "HOLD";
+  confidence: number;
+  entry_price: number;
+  stop_loss: number | null;
+  take_profit: number | null;
+  risk_reward: number | null;
+  suggested_quantity: number;
+  risk_amount: number;
+  status: "ready" | "waiting";
+  data_source: "provider" | "demo";
+  reasons: string[];
+  strategy_breakdown: IndicatorBreakdown[];
+}
+
+export interface PaperOrder {
+  id: number;
+  mode: "paper";
+  ticker: string;
+  side: "BUY" | "SELL";
+  quantity: number;
+  entry_price: number;
+  stop_loss: number;
+  take_profit: number;
+  risk_amount: number;
+  status: string;
+  created_at: string;
+}
+
+export interface PaperPortfolio {
+  mode: "paper";
+  starting_cash: number;
+  available_cash: number;
+  reserved_risk: number;
+  open_orders: PaperOrder[];
+}

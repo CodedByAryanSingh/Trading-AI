@@ -1,6 +1,6 @@
 """Base strategy classes and types."""
 from __future__ import annotations
-from abc import ABC, abstractmethod
+from abc import ABC
 from dataclasses import asdict, dataclass
 from typing import Any, Dict
 import pandas as pd
@@ -22,5 +22,5 @@ class Strategy(ABC):
         if not isinstance(data, pd.DataFrame):
             raise StrategyError("data must be a pandas DataFrame")
         self.data = data.copy()
-    @abstractmethod
-    def generate(self) -> Signal: ...
+    def generate(self) -> Signal:
+        raise NotImplementedError("Strategies must implement generate()")

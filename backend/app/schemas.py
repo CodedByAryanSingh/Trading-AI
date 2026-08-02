@@ -131,3 +131,58 @@ class WatchlistOut(BaseModel):
     name: str
     symbols: List[str]
     created_at: datetime
+
+
+# Trading intelligence and paper execution
+class TradeIdeaRequest(BaseModel):
+    ticker: str = Field(..., min_length=1, max_length=30)
+    interval: str = Field(default="1h", pattern="^(1m|5m|15m|30m|1h|4h|1d|1wk)$")
+    period: str = Field(default="6mo", pattern="^(5d|1mo|3mo|6mo|1y|2y|5y)$")
+    risk_percent: float = Field(default=0.01, gt=0, le=0.02)
+
+
+class TradeIdeaResponse(BaseModel):
+    ticker: str
+    action: str
+    confidence: float
+    entry_price: float
+    stop_loss: float | None
+    take_profit: float | None
+    risk_reward: float | None
+    suggested_quantity: float
+    risk_amount: float
+    status: str
+    data_source: str
+    reasons: List[str]
+    strategy_breakdown: List[IndicatorBreakdown]
+
+
+class PaperOrderRequest(BaseModel):
+    ticker: str = Field(..., min_length=1, max_length=30)
+    side: str = Field(..., pattern="^(BUY|SELL)$")
+    entry_price: float = Field(..., gt=0)
+    stop_loss: float = Field(..., gt=0)
+    take_profit: float = Field(..., gt=0)
+    risk_percent: float = Field(default=0.01, gt=0, le=0.02)
+
+
+class PaperOrderResponse(BaseModel):
+    id: int
+    mode: str = "paper"
+    ticker: str
+    side: str
+    quantity: float
+    entry_price: float
+    stop_loss: float
+    take_profit: float
+    risk_amount: float
+    status: str
+    created_at: datetime
+
+
+class PaperPortfolioResponse(BaseModel):
+    mode: str = "paper"
+    starting_cash: float
+    available_cash: float
+    reserved_risk: float
+    open_orders: List[PaperOrderResponse]

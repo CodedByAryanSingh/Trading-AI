@@ -20,7 +20,7 @@ export default function Chart({ candles, volumes, height = 500 }: ChartProps) {
     const chart = createChart(chartContainerRef.current, {
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
-        textColor: "currentColor",
+        textColor: "#94a3b8",
       },
       grid: {
         vertLines: { color: "rgba(128, 128, 128, 0.1)" },

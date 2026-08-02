@@ -1,12 +1,42 @@
-"""MT5 simulator: provides a mock websocket stream that mimics MetaTrader5 tick and candle updates.
-This is a simulated feed suitable for development and demos when a real MT5 terminal is not available.
-"""
+"""MT5 websocket feed with an optional real MetaTrader 5 connector."""
 from __future__ import annotations
 import asyncio
 import random
 import time
-from typing import Dict, Any
 from fastapi import WebSocket, WebSocketDisconnect
+from app.config import settings
+
+
+def _real_mt5():
+    if not settings.mt5_enabled:
+        return None
+    try:
+        import MetaTrader5 as mt5
+    except ImportError:
+        return None
+    initialized = mt5.initialize(path=settings.mt5_path) if settings.mt5_path else mt5.initialize()
+    if not initialized:
+        return None
+    if settings.mt5_login and settings.mt5_password and settings.mt5_server:
+        if not mt5.login(settings.mt5_login, password=settings.mt5_password, server=settings.mt5_server):
+            mt5.shutdown()
+            return None
+    return mt5
+
+
+def _history(mt5, ticker: str, timeframe: str):
+    if mt5 is None:
+        return []
+    timeframe_map = {
+        "1m": mt5.TIMEFRAME_M1, "5m": mt5.TIMEFRAME_M5, "15m": mt5.TIMEFRAME_M15,
+        "1h": mt5.TIMEFRAME_H1, "4h": mt5.TIMEFRAME_H4, "1d": mt5.TIMEFRAME_D1,
+    }
+    rates = mt5.copy_rates_from_pos(ticker, timeframe_map.get(timeframe, mt5.TIMEFRAME_M1), 0, 200)
+    if rates is None:
+        return []
+    return [{"time": int(row["time"]), "open": float(row["open"]), "high": float(row["high"]),
+             "low": float(row["low"]), "close": float(row["close"]), "volume": float(row["tick_volume"])}
+            for row in rates]
 
 
 async def mt5_stream(websocket: WebSocket):
@@ -14,6 +44,27 @@ async def mt5_stream(websocket: WebSocket):
     params = websocket.query_params
     ticker = params.get("ticker", "EURUSD").upper()
     timeframe = params.get("tf", "1m")  # e.g., 1m,5m,1h
+    mt5 = await asyncio.to_thread(_real_mt5)
+
+    if mt5:
+        await websocket.send_json({"type": "status", "source": "mt5", "message": "Connected to MetaTrader 5"})
+        history = await asyncio.to_thread(_history, mt5, ticker, timeframe)
+        await websocket.send_json({"type": "history", "symbol": ticker, "candles": history})
+        try:
+            while True:
+                await asyncio.sleep(1)
+                tick = await asyncio.to_thread(mt5.symbol_info_tick, ticker)
+                if tick is None:
+                    await websocket.send_json({"type": "status", "source": "mt5", "message": f"Waiting for {ticker} market data"})
+                    continue
+                await websocket.send_json({"type": "tick", "symbol": ticker, "price": float(tick.last or tick.bid), "time": int(tick.time)})
+        except WebSocketDisconnect:
+            return
+        finally:
+            mt5.shutdown()
+        return
+
+    await websocket.send_json({"type": "status", "source": "simulator", "message": "MT5 terminal unavailable; using demo feed"})
 
     # map timeframe to seconds
     tf_map = {"1m": 60, "5m": 300, "15m": 900, "1h": 3600, "4h": 14400, "1d": 86400}
@@ -25,7 +76,7 @@ async def mt5_stream(websocket: WebSocket):
     # Current bar and tick
     now = int(time.time())
     current_bar = {
-        "time": now,
+        "time": now - (now % interval),
         "open": base_price,
         "high": base_price,
         "low": base_price,
@@ -70,32 +121,6 @@ async def mt5_stream(websocket: WebSocket):
                 current_bar = {"time": int(now_time), "open": current_bar["close"], "high": current_bar["close"], "low": current_bar["close"], "close": current_bar["close"]}
                 last_emit = now_time
 
-            # handle incoming messages non-blocking
-            try:
-                if websocket.client_state.name == "CONNECTED":
-                    # receive with short timeout
-                    recv_task = asyncio.create_task(websocket.receive_text())
-                    done, _ = await asyncio.wait({recv_task}, timeout=0, return_when=asyncio.ALL_COMPLETED)
-                    if recv_task in done:
-                        msg = recv_task.result()
-                        # simple control messages: ping, set_ticker:EURUSD, set_tf:5m
-                        if msg == "ping":
-                            await websocket.send_json({"type": "pong"})
-                        elif msg.startswith("set_ticker:"):
-                            new_t = msg.split(":", 1)[1].upper()
-                            ticker = new_t
-                            # tweak base_price for new ticker
-                            base_price = 1.0000 + (sum(ord(c) for c in ticker) % 100) / 10000.0
-                            await websocket.send_json({"type": "info", "message": f"ticker set to {ticker}"})
-                        elif msg.startswith("set_tf:"):
-                            new_tf = msg.split(":", 1)[1]
-                            interval = tf_map.get(new_tf, interval)
-                            await websocket.send_json({"type": "info", "message": f"timeframe set to {new_tf}"})
-            except asyncio.CancelledError:
-                break
-            except Exception:
-                # ignore receive errors
-                pass
     except WebSocketDisconnect:
         return
     except Exception:

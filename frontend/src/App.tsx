@@ -9,6 +9,7 @@ import BacktestDashboard from "@/pages/BacktestDashboard";
 import BacktestResults from "@/pages/BacktestResults";
 import Portfolio from "@/pages/Portfolio";
 import StrategyResults from "@/pages/StrategyResults";
+import TradingDesk from "@/pages/TradingDesk";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/backtest" element={<BacktestDashboard />} />
         <Route path="/backtest/results" element={<BacktestResults />} />
         <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/trade" element={<TradingDesk />} />
         <Route path="/strategy-results" element={<StrategyResults />} />
       </Route>
     </Routes>

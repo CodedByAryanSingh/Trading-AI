@@ -5,7 +5,7 @@ import random
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1 import auth, market, analysis, backtest, predictions, portfolio
+from app.api.v1 import auth, market, analysis, backtest, predictions, portfolio, trading
 from app.config import settings
 from app.db import close_db, init_db
 from app.utils.logger import get_logger
@@ -32,6 +32,7 @@ app.include_router(analysis.router,    prefix="/api/v1/analysis",    tags=["Anal
 app.include_router(backtest.router,    prefix="/api/v1/backtest",    tags=["Backtesting"])
 app.include_router(predictions.router, prefix="/api/v1/predictions", tags=["Predictions"])
 app.include_router(portfolio.router,   prefix="/api/v1/portfolio",   tags=["Portfolio"])
+app.include_router(trading.router,     prefix="/api/v1/trading",     tags=["Trading Workspace"])
 
 @app.get("/healthz", tags=["Health"])
 async def health_check() -> dict:
